@@ -9,6 +9,8 @@
         .highlight { font-weight: bold; }
         .win { background-color: #c8e6c9; }
         .loss { background-color: #ffcccb; }
+        .tie { background-color: #faffcb; }
+        .na {  }
         .red-alliance { background-color: #ffdddd; }
         .blue-alliance { background-color: #ddddff; }
     </style>
@@ -24,8 +26,7 @@
                 <th>Match Number</th>
                 <th>Red Teams</th>
                 <th>Blue Teams</th>
-                <th>Blue Score</th>
-                <th>Red Score</th>
+                <th>Score</th>
                 <th>Win/Loss for {{ highlight_team.replace('frc', '') }}</th>
                 <th>Time</th>
             </tr>
@@ -67,23 +68,26 @@
                     {% endfor %}
                 </td>
 
-                <td>{{ match[3] }}</td>
-                <td>{{ match[4] }}</td>
+                <td>{{ match[4] }} - {{ match[3] }}</td>
 
                 <td {% if isHighlightBlue or isHighlightRed %}
-                        class="{{ 'win' if (isHighlightBlue and match[3] > match[4]) or (isHighlightRed and match[4] > match[3]) else 'loss' }}"
+                class="{{ 'win' if (isHighlightBlue and match[3] > match[4]) or (isHighlightRed and match[4] > match[3]) else 'loss' if (isHighlightBlue and match[4] > match[3]) or (isHighlightRed and match[3] > match[4]) else 'na' }}"
                     {% endif %}>
                     {% if isHighlightBlue %}
                         {% if match[3] > match[4] %}
                             Win
-                        {% else %}
+                        {% elif match[4] > match[3] %}
                             Loss
+                        {% else %}
+                            N/A
                         {% endif %}
                     {% elif isHighlightRed %}
                         {% if match[4] > match[3] %}
                             Win
-                        {% else %}
+                        {% elif match[3] > match[4] %}
                             Loss
+                        {% else %}
+                            N/A
                         {% endif %}
                     {% else %}
                         N/A
